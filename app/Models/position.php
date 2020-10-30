@@ -7,5 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class position extends Model
 {
-    use HasFactory;
+    protected $fillable = ['title','admin_created_id',
+                           'admin_updated_id'
+                          ];
 }

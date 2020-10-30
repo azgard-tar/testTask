@@ -15,16 +15,16 @@ class CreateEmployeesTable extends Migration
     {
         Schema::create('employees', function (Blueprint $table) {
             $table->id();
-            $table->string('fullName',256)->unique();
-            $table->string('email');
-            $table->integer('id_Position');
-            $table->integer('id_Head');
-            $table->date('dateOfEmployment');
-            $table->string('phoneNumber', 15);
-            $table->double('salary',10,4);
-            $table->string('photo');
-            $table->integer('admin_created_id');
-            $table->integer('admin_updated_id');
+            $table->string( 'full_name', 256 )->unique();
+            $table->string( 'email' );
+            $table->integer( 'id_position' );
+            $table->integer( 'id_head' )->nullable();
+            $table->date( 'date_of_employment' );
+            $table->string( 'phone_number', 15 );
+            $table->double( 'salary', 10, 4 );
+            $table->string( 'photo' );
+            $table->integer( 'admin_created_id' );
+            $table->integer( 'admin_updated_id' );
             $table->timestamps();
         });
     }
