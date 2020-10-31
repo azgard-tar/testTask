@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+use Faker;
 
 class PositionSeeder extends Seeder
 {
@@ -13,6 +15,13 @@ class PositionSeeder extends Seeder
      */
     public function run()
     {
-        \App\Models\position::factory(10)->create();
+        $faker = Faker\Factory::create();
+        for( $i = 0; $i < 10; $i++ ){
+            DB::table('positions')->insert([
+                'admin_created_id' => 1,
+                'admin_updated_id' => 1,
+                'title' => $faker->jobTitle
+            ]);
+        }
     }
 }

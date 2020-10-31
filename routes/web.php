@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\EmployeeController;
+use App\Htpp\Controllers\PositionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,11 +25,9 @@ Route::get('/', function () {
 });
 
 Route::middleware(['auth'])->group( function() {
-    Route::get('/employeesList', function () {
-        return view('employeesList', [ 'check' => true ]);
-    })->name('employees');
+    Route::get('/employeesList', [EmployeeController::class, 'show'])->name('employees');
     Route::get('/positions', function () {
-        return view('positionsList', [ 'check' => true ]);
+        return view('positionsList');
     })->name('positions');
     Route::get('/logout', [LoginController::class, 'logout'] );
 });

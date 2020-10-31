@@ -3,6 +3,9 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+use Faker;
 
 class EmployeeSeeder extends Seeder
 {
@@ -13,6 +16,20 @@ class EmployeeSeeder extends Seeder
      */
     public function run()
     {
-        \App\Models\employee::factory(10)->create();
+        $faker = Faker\Factory::create();
+        for( $i = 0; $i < 10; $i++ ){
+            DB::table('employees')->insert([
+                'full_name' => $faker->name,
+                'email' => $faker->email,
+                'id_position' => $faker->numberBetween(1,10),
+                'id_head' => $faker->numberBetween(1,10),
+                'date_of_employment' => $faker->date( 'Y-m-d','+30 years'),
+                'phone_number' => $faker->e164PhoneNumber(),
+                'salary' => $faker->numberBetween(0,500000),
+                'photo' => Str::random(10),
+                'admin_created_id' => 1,
+                'admin_updated_id' => 1
+            ]);
+        }
     }
 }

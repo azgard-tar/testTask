@@ -1,5 +1,6 @@
 <style>
     .thisNav{
+        position: relative;
         z-index: 10;
         background-color: rgba(80,80,80,0.5);
     }
