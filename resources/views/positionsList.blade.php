@@ -10,7 +10,7 @@
     <title> List of positions </title>
 </head>
 <body>
-    @include('sidebar')
+    {{ $positions }}
     <script src="{{ asset('js/app.js') }}"></script>
     <script src="{{ asset('js/adminlte.js') }}"></script>
 </body>

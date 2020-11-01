@@ -1,4 +1,12 @@
-/******/ (function(modules) { // webpackBootstrap
+/******/ 
+
+$.ajaxSetup({
+  headers: {
+    Authorization: 'Bearer:' + $('meta[name="api-token"]').attr("content")
+  }
+});
+
+          (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/

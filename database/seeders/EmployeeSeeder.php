@@ -24,9 +24,8 @@ class EmployeeSeeder extends Seeder
                 'id_position' => $faker->numberBetween(1,10),
                 'id_head' => $faker->numberBetween(1,10),
                 'date_of_employment' => $faker->date( 'Y-m-d','+30 years'),
-                'phone_number' => $faker->e164PhoneNumber(),
+                'phone_number' => $faker->numerify('+380(##)#######'),
                 'salary' => $faker->numberBetween(0,500000),
-                'photo' => Str::random(10),
                 'admin_created_id' => 1,
                 'admin_updated_id' => 1
             ]);

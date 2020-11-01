@@ -6,10 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="{{ asset('/bower_components/admin-lte/plugins/fontawesome-free/css/all.min.css')}}" rel="stylesheet" />
     <link href="http://code.ionicframework.com/ionicons/2.0.0/css/ionicons.min.css" rel="stylesheet" />
-    <link href="{{ asset('/bower_components/admin-lte/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css')}}" rel="stylesheet"/>
-    <link href="{{ asset('/bower_components/admin-lte/plugins/datatables-responsive/css/responsive.bootstrap4.min.css')}}" rel="stylesheet"/>
-    <link href="{{ asset('/bower_components/admin-lte/dist/css/adminlte.min.css')}}" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet"/>
+    <link href="{{ asset('/bower_components/admin-lte/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css')}}" rel="stylesheet" />
+    <link href="{{ asset('/bower_components/admin-lte/plugins/datatables-responsive/css/responsive.bootstrap4.min.css')}}" rel="stylesheet" />
+    <link href="{{ asset('/bower_components/admin-lte/dist/css/adminlte.min.css')}}" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet" />
     <title> List of employees </title>
 </head>
 
@@ -24,7 +24,7 @@
                             <h1>Employees</h1>
                         </div>
                         <div class="col-sm-6 d-flex flex-row-reverse">
-                            <a class="btn btn-primary" href="#" role="button">Add employee</a>
+                            <a class="btn btn-primary" href="/employees/add" role="button">Add employee</a>
                         </div>
                     </div>
                 </div><!-- /.container-fluid -->
@@ -57,7 +57,7 @@
                                             <tr>
                                                 <td>{{ $employee->photo }}</td>
                                                 <td>{{ $employee->full_name }}</td>
-                                                <td>{{ $employee->id_position }}</td>
+                                                <td>{{ $employee->title }}</td>
                                                 <td>{{ $employee->date_of_employment }}</td>
                                                 <td>{{ $employee->phone_number }}</td>
                                                 <td>{{ $employee->email }}</td>
@@ -70,14 +70,14 @@
                                                             </a>
                                                         </li>
                                                         <li class="list-inline-item">
-                                                            <a class="text-secondary"href="#">
+                                                            <a data-toggle="modal" data-target="#myModal" data-id="{{$employee->id}}" data-name="{{$employee->full_name}}">
                                                                 <i class="fa fa-trash-alt"></i>
                                                             </a>
                                                         </li>
                                                     </ul>
                                                 </td>
                                             </tr>
-                                            @endforeach 
+                                            @endforeach
                                         </tbody>
                                     </table>
                                 </div>
@@ -88,6 +88,23 @@
             </section>
         </div>
     </div>
+
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Remove employee</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <a id="modal-btn" class="btn btn-primary" role="button">Remove</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="{{ asset ('/bower_components/admin-lte/plugins/jquery/jquery.min.js') }}"></script>
     <script src="{{ asset ('/bower_components/admin-lte/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset ('/bower_components/admin-lte/plugins/datatables/jquery.dataTables.min.js') }}"></script>
@@ -97,11 +114,20 @@
     <script src="{{ asset ('/bower_components/admin-lte/dist/js/adminlte.min.js') }}"></script>
     <script src="{{ asset ('/bower_components/admin-lte/dist/js/demo.js') }}"></script>
     <script>
+        var el;
         $(function() {
             $("#example1").DataTable({
                 "responsive": true,
                 "autoWidth": false,
             });
+        });
+        $('#myModal').on('show.bs.modal', function(event) {
+            var button = $(event.relatedTarget)
+            var recipient = button.data('name');
+            var modal = $(this)
+            el = button.parents('tr');
+            modal.find('.modal-body').text('Are you sure you want to remove employee ' + recipient + '?')
+            modal.find('#modal-btn').attr('href', '/employees/delete/' + button.data('id'))
         });
     </script>
 </body>

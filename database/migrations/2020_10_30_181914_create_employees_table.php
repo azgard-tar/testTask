@@ -22,7 +22,7 @@ class CreateEmployeesTable extends Migration
             $table->date( 'date_of_employment' );
             $table->string( 'phone_number', 15 );
             $table->double( 'salary', 10, 4 );
-            $table->string( 'photo' );
+            $table->string( 'photo' )->default('images/no-avatar.png');
             $table->integer( 'admin_created_id' );
             $table->integer( 'admin_updated_id' );
             $table->timestamps();
