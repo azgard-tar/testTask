@@ -4,13 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add position</title>
+    <title>Edit position</title>
     <link rel="stylesheet" href="/bower_components/admin-lte/dist/css/adminlte.min.css">
 </head>
 
 <body>
     @include('sidebar')
-    <div class="content-wrapper w-25">
+    <div class="content-wrapper w-50">
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <div class="container-fluid">
@@ -30,24 +30,46 @@
                     <label for="inputTitle">Title</label>
                     <input type="text" value="{{ $position->title }}" name="title" class="form-control" id="inputTitle" placeholder="Enter title">
                 </div>
-                <div class="card-footer">
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                    <a class="btn btn-secondary" href="/positions">Cancel</a>
-                </div>
-                Created_at: {{ $position->created_at ?? ""}}<br/>
-                Updated_at: {{ $position->updated_at ?? ""}}<br/>
-                Admin_created_id: {{ $position->qdmin_created_id ?? ""}}<br/>
-                Admin_updated_id: {{ $position->qdmin_updated_id ?? ""}}<br/>
-                @if( count( $errors ) > 0 )
-                    <div class="alert alert-danger" role="alert">
-                        {{ json_encode($errors,true) }}
+                <div class="container-fluid">
+                <div class="row">
+                    <div class="col">
+                        <a class="btn btn-secondary btn-block" href="/positions">Cancel</a>
                     </div>
+                    <div class="col">
+                        <button type="submit" class="btn btn-primary btn-block">Submit</button>
+                    </div>
+                </div>
+                </div>
+                @if( count( $errors ) > 0 )
+                <div class="alert alert-danger" role="alert">
+                    @foreach( $errors as $error )
+                        {{ $error[0] }}<br/>
+                    @endforeach
+                </div>
                 @endif
             </form>
-            
-        </div>
-    </div>
 
+        </div>
+
+        <table class="table">
+            <tr>
+                <th style="width:50%">Created_at:</th>
+                <td>{{ $position->created_at ?? ""}}</td>
+            </tr>
+            <tr>
+                <th>Updated_at</th>
+                <td>{{ $position->updated_at ?? ""}}</td>
+            </tr>
+            <tr>
+                <th>Admin_created_id:</th>
+                <td>{{ $position->admin_created_id ?? ""}}</td>
+            </tr>
+            <tr>
+                <th>Admin_updated_id:</th>
+                <td>{{ $position->admin_updated_id ?? ""}}</td>
+            </tr>
+        </table>
+    </div>
     <script src="/bower_components/admin-lte/dist/js/adminlte.min.js"></script>
     <script src="/bower_components/admin-lte/plugins/jquery/jquery.min.js"></script>
     <script src="/bower_components/admin-lte/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>

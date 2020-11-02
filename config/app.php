@@ -6,7 +6,8 @@ return [
 
     'date_format' => 'Y-m-d',
     'datetime_format' => 'Y-m-d H:i:s',
-    'date_format_javascript' => 'YYYY/MM/DD',
+    'date_format_javascript' => 'yyyy-m-d',
+    'datetime_format_javascript' => 'yyyy-m-d h:m:s',
 
     /*
     |--------------------------------------------------------------------------
@@ -73,7 +74,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'Europe/Kiev',
 
     /*
     |--------------------------------------------------------------------------

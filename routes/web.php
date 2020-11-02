@@ -26,20 +26,13 @@ Route::get('/', function () {
 });
 
 Route::middleware(['auth'])->group( function() {
+    // Employee
     Route::get('/employeesList', function(){
         return view('employeesList', (new EmployeeController)->show() );
     })->name('employees');
-    Route::get('/positions', function () {
-        return view('positionsList',(new PositionController)->show());
-    })->name('positions');
-    Route::get('/logout', [LoginController::class, 'logout'] );
     Route::get('/employees/delete/{id}', function($id){
         (new EmployeeController)->delete($id);
         return redirect()->route('employees');
-    });
-    Route::get('/positions/delete/{id}', function($id){
-        (new PositionController)->delete($id);
-        return redirect()->route('positions');
     });
     Route::get('/employees/add', function(){
         return view("employeeAdd",(new EmployeeController)->getAddData());
@@ -47,18 +40,16 @@ Route::middleware(['auth'])->group( function() {
     Route::post('/employees/add', function(Request $request){
         $response = (new EmployeeController)->add($request);
         if( ! $response->status ){
-            return view("employeeAdd",(object) array_merge((array)$response,(array)(new EmployeeController)->getAddData()));
+            return view("employeeAdd",(array) array_merge((array)$response,(array)(new EmployeeController)->getAddData()));
         }
         return redirect()->route("employees");
     });
-
     Route::get('/employees/edit/{id}', function($id){
         return view("employeeEdit",array_merge(
             (array)(new EmployeeController)->getOne($id), 
             (array)(new EmployeeController)->getAddData()
         ));
     });
-
     Route::put('/employees/edit/{id}', function(Request $request, $id){
         $response = (new EmployeeController)->update($request, $id);
         if( ! $response->status ){
@@ -70,22 +61,29 @@ Route::middleware(['auth'])->group( function() {
         }
         return redirect()->route("employees");
     });
+    Route::get('/employee/subordination/{id}',[EmployeeController::class, 'subord' ]);
 
+    // Position
+    Route::get('/positions', function () {
+        return view('positionsList',(new PositionController)->show());
+    })->name('positions');
+    Route::get('/positions/delete/{id}', function($id){
+        (new PositionController)->delete($id);
+        return redirect()->route('positions');
+    });
     Route::get('/positions/add', function(){
         return view("positionAdd");
     });
     Route::post('/positions/add', function(Request $request){
         $response = (new PositionController)->add($request);
         if( ! $response->status ){
-            return view("positionAdd",(object)$response);
+            return view("positionAdd",(array)$response);
         }
         return redirect()->route("positions");
     });
-
     Route::get('/positions/edit/{id}', function($id){
         return view("positionEdit", (new PositionController)->getOne($id), );
     });
-
     Route::put('/positions/edit/{id}', function(Request $request, $id){
         $response = (new PositionController)->update($request, $id);
         if( ! $response->status ){
@@ -96,6 +94,9 @@ Route::middleware(['auth'])->group( function() {
         }
         return redirect()->route("positions");
     });
+
+    // Other
+    Route::get('/logout', [LoginController::class, 'logout'] );
 
 
 });

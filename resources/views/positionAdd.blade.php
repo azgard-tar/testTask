@@ -34,9 +34,11 @@
                     <a class="btn btn-secondary" href="/positions">Cancel</a>
                 </div>
                 @if( count( $errors ) > 0 )
-                    <div class="alert alert-danger" role="alert">
-                        {{ json_encode($errors,true) }}
-                    </div>
+                <div class="alert alert-danger" role="alert">
+                    @foreach( $errors as $error )
+                        {{ $error[0] }}<br/>
+                    @endforeach
+                </div>
                 @endif
             </form>
             
