@@ -43,7 +43,7 @@ class EmployeeController extends Controller
         $empl = employee::find($id);
         if (!is_null($empl)) {
             $empl->delete();
-            return ["error" => null, "code" => "203"];
+            return ["error" => null, "code" => 203];
         } else {
             return ["error" => "Employee was not found", "code" => 404];
         }

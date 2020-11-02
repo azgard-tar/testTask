@@ -9,19 +9,28 @@ use Illuminate\Support\Facades\DB;
 class PositionController extends Controller
 {
     public function show(){
-        return response()->json( ['positions' => position::all()], 200);
+        return ['positions' => position::all(), "code" => 200];
     }
     public function getOne($id){
-        return response()->json( ['position' => position::find($id)->get() ], 200 );
+        $posit = position::find($id);
+        if (!is_null($posit)){
+            return ['status' => true, 'position' => $posit, "code" => 200];
+        }
+        else
+        return (object)[
+            'status' => false, 
+            "errors" => ["Position was not found"], 
+            "code" => 404
+        ];
     }
     public function delete($id){
-        $empl = position::find($id);
-        if( ! is_null($empl) ){
-            $empl->delete();
-            return response()->json(203,null);
+        $posit = position::find($id);
+        if( ! is_null($posit) ){
+            $posit->delete();
+            return ["error" => null, "code" => 203];
         }
         else{
-            return response()->json(["error"=>"Position was not found"],404);
+            return ["error"=>"Position was not found","code" => 404];
         }
     }
 

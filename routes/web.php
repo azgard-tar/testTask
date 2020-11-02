@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\EmployeeController;
-use App\Htpp\Controllers\PositionController;
+use App\Http\Controllers\PositionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,12 +30,16 @@ Route::middleware(['auth'])->group( function() {
         return view('employeesList', (new EmployeeController)->show() );
     })->name('employees');
     Route::get('/positions', function () {
-        return view('positionsList',(new \App\Http\Controllers\PositionController)->show());
+        return view('positionsList',(new PositionController)->show());
     })->name('positions');
     Route::get('/logout', [LoginController::class, 'logout'] );
     Route::get('/employees/delete/{id}', function($id){
         (new EmployeeController)->delete($id);
         return redirect()->route('employees');
+    });
+    Route::get('/positions/delete/{id}', function($id){
+        (new PositionController)->delete($id);
+        return redirect()->route('positions');
     });
     Route::get('/employees/add', function(){
         return view("employeeAdd",(new EmployeeController)->getAddData());
@@ -66,6 +70,34 @@ Route::middleware(['auth'])->group( function() {
         }
         return redirect()->route("employees");
     });
+
+    Route::get('/positions/add', function(){
+        return view("positionAdd");
+    });
+    Route::post('/positions/add', function(Request $request){
+        // $response = (new PositionController)->add($request);
+        // if( ! $response->status ){
+        //     return view("positionAdd",(object)$response);
+        // }
+        // return redirect()->route("positions");
+    });
+
+    Route::get('/positions/edit/{id}', function($id){
+        return view("positionEdit", (new PositionController)->getOne($id), );
+    });
+
+    Route::put('/positions/edit/{id}', function(Request $request, $id){
+        // $response = (new PositionController)->update($request, $id);
+        // if( ! $response->status ){
+        //     return view("positionEdit",array_merge(
+        //         (array)(new PositionController)->getOne($id),
+        //         (array)$response
+        //     ));
+        // }
+        // return redirect()->route("positions");
+    });
+
+
 });
 
 Route::get('/login', [LoginController::class, 'authenticate'] )->name('login');
