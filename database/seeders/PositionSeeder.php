@@ -20,7 +20,9 @@ class PositionSeeder extends Seeder
             DB::table('positions')->insert([
                 'admin_created_id' => 1,
                 'admin_updated_id' => 1,
-                'title' => $faker->jobTitle
+                'title' => $faker->jobTitle,
+                'updated_at' => date(config('app.datetime_format')),
+                'created_at' => date(config('app.datetime_format'))
             ]);
         }
     }

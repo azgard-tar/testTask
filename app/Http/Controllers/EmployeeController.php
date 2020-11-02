@@ -67,12 +67,12 @@ class EmployeeController extends Controller
             "id_position" => "exists:positions,id"
         ]);
         if ($validator->fails()){
-            return (object)['status' => false, 'errors' => $validator->errors()->toArray(), 'dataReq' => $request->all()];
+            return (object)['status' => false, 'errors' => $validator->errors()->toArray()];
         }
         
         $data = $request->except(['id','photo']);
-        $data['created_at'] = date(config('app.date_format'));
-        $data['updated_at'] = date(config('app.date_format'));
+        $data['created_at'] = date(config('app.datetime_format'));
+        $data['updated_at'] = date(config('app.datetime_format'));
         $data['admin_created_id'] = auth()->user()->id;
         $data['admin_updated_id'] = auth()->user()->id;
         $employee = employee::create($data);
@@ -103,7 +103,7 @@ class EmployeeController extends Controller
 
         $empl = employee::find($id);
         if (!is_null($empl)){
-            $request->updated_at = date(config('app.date_format'));
+            $request->updated_at = date(config('app.datetime_format'));
             $request->admin_updated_id = auth()->user()->id;
             $empl->update( $request->except(['id','created_at','admin_created_id','date_of_employment','photo']) );
             $empl->date_of_employment = date(config('app.date_format'), strtotime($request->date_of_employment));

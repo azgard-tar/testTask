@@ -75,11 +75,11 @@ Route::middleware(['auth'])->group( function() {
         return view("positionAdd");
     });
     Route::post('/positions/add', function(Request $request){
-        // $response = (new PositionController)->add($request);
-        // if( ! $response->status ){
-        //     return view("positionAdd",(object)$response);
-        // }
-        // return redirect()->route("positions");
+        $response = (new PositionController)->add($request);
+        if( ! $response->status ){
+            return view("positionAdd",(object)$response);
+        }
+        return redirect()->route("positions");
     });
 
     Route::get('/positions/edit/{id}', function($id){
@@ -87,14 +87,14 @@ Route::middleware(['auth'])->group( function() {
     });
 
     Route::put('/positions/edit/{id}', function(Request $request, $id){
-        // $response = (new PositionController)->update($request, $id);
-        // if( ! $response->status ){
-        //     return view("positionEdit",array_merge(
-        //         (array)(new PositionController)->getOne($id),
-        //         (array)$response
-        //     ));
-        // }
-        // return redirect()->route("positions");
+        $response = (new PositionController)->update($request, $id);
+        if( ! $response->status ){
+            return view("positionEdit",array_merge(
+                (array)(new PositionController)->getOne($id),
+                (array)$response
+            ));
+        }
+        return redirect()->route("positions");
     });
 
 
