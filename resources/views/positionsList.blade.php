@@ -19,7 +19,7 @@
                 <div class="container-fluid">
                     <div class="row mb-2">
                         <div class="col-sm-6">
-                            <h1>Employees</h1>
+                            <h1>Positions</h1>
                         </div>
                         <div class="col-sm-6 d-flex flex-row-reverse">
                             <a class="btn btn-primary" href="/positions/add" role="button">Add position</a>
@@ -33,7 +33,7 @@
                         <div class="col-12">
                             <div class="card">
                                 <div class="card-header">
-                                    <h3 class="card-title">Employees</h3>
+                                    <h3 class="card-title">Positions</h3>
                                 </div>
                                 <!-- /.card-header -->
                                 <div class="card-body">
@@ -114,7 +114,8 @@
             var recipient = button.data('name');
             var modal = $(this)
             el = button.parents('tr');
-            modal.find('.modal-body').text('Are you sure you want to remove position ' + recipient + '?')
+            modal.find('.modal-body').text('Are you sure you want to remove position ' + recipient + 
+            '? Position of exists employees will be setted in default value(\'none\').')
             modal.find('#modal-btn').attr('href', '/positions/delete/' + button.data('id'))
         });
     </script>

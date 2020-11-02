@@ -126,7 +126,8 @@
             var recipient = button.data('name');
             var modal = $(this)
             el = button.parents('tr');
-            modal.find('.modal-body').text('Are you sure you want to remove employee ' + recipient + '?')
+            modal.find('.modal-body').text('Are you sure you want to remove employee ' + recipient + 
+            '? Head of subordinates will be setted as defaul value(null).')
             modal.find('#modal-btn').attr('href', '/employees/delete/' + button.data('id'))
         });
     </script>

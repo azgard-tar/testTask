@@ -31,7 +31,7 @@
                 </div>
                 <div class="card-footer">
                     <button type="submit" class="btn btn-primary">Submit</button>
-                    <a type="submit" class="btn btn-secondary" href="/positions">Cancel</a>
+                    <a class="btn btn-secondary" href="/positions">Cancel</a>
                 </div>
                 @if( count( $errors ) > 0 )
                     <div class="alert alert-danger" role="alert">

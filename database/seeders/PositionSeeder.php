@@ -15,6 +15,13 @@ class PositionSeeder extends Seeder
      */
     public function run()
     {
+        DB::table('positions')->insert([
+            'admin_created_id' => 1,
+            'admin_updated_id' => 1,
+            'title' => 'none',
+            'updated_at' => date(config('app.datetime_format')),
+            'created_at' => date(config('app.datetime_format'))
+        ]);
         $faker = Faker\Factory::create();
         for( $i = 0; $i < 10; $i++ ){
             DB::table('positions')->insert([

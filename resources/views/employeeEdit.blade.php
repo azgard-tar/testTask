@@ -88,6 +88,11 @@
                 <div class="form-group">
                     <label>Head</label>
                     <select class="form-control select2" name="id_head" style="width: 100%;">
+                        @if( is_null( $employee->id_head ) )
+                            <option selected="selected" value="-1">none</option>
+                        @else
+                            <option value="-1">none</option>
+                        @endif
                         @foreach( $employees as $employee1 )
                         @if( $employee1->id == $employee->id_head )
                         <option selected="selected" value="{{ $employee1->id }}">{{ $employee1->full_name }}</option>
@@ -112,6 +117,7 @@
 
         <div class="card-footer">
             <button type="submit" class="btn btn-primary">Submit</button>
+            <a class="btn btn-secondary" href="/employeesList">Cancel</a>
         </div>
         @if(count($errors)>0)
         <div id="error-box">

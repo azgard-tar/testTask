@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\position;
-use Illuminate\Support\Facades\DB;
+use App\Models\employee;
 use Illuminate\Support\Facades\Validator;
 
 class PositionController extends Controller
@@ -27,6 +27,7 @@ class PositionController extends Controller
     public function delete($id){
         $posit = position::find($id);
         if( ! is_null($posit) ){
+            employee::where('id_position',$posit->id)->update(['id_position' => 1]);
             $posit->delete();
             return ["error" => null, "code" => 203];
         }

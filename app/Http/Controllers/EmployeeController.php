@@ -43,6 +43,7 @@ class EmployeeController extends Controller
         $empl = employee::find($id);
         if (!is_null($empl)) {
             $empl->delete();
+            employee::where('id_head',$empl->id)->update(['id_head' => null]);
             return ["error" => null, "code" => 203];
         } else {
             return ["error" => "Employee was not found", "code" => 404];
@@ -90,7 +91,7 @@ class EmployeeController extends Controller
             "phone" => "regex:/\+380\(\d{2}\)\d{7}/",
             "email" => "email",
             "salary" => "min:0|max:500000",
-            "id_head" => "exists:employees,id",
+            "id_head" => "integer",
             "id_position" => "exists:positions,id"
         ]);
         if ($validator->fails()){
@@ -106,6 +107,8 @@ class EmployeeController extends Controller
             $request->updated_at = date(config('app.datetime_format'));
             $request->admin_updated_id = auth()->user()->id;
             $empl->update( $request->except(['id','created_at','admin_created_id','date_of_employment','photo']) );
+            if($request->id_head == -1)
+                $empl->id_head = null;
             $empl->date_of_employment = date(config('app.date_format'), strtotime($request->date_of_employment));
             $empl->save();
             if( $request->hasFile('photo') ){

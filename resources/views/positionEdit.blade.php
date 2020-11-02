@@ -32,7 +32,7 @@
                 </div>
                 <div class="card-footer">
                     <button type="submit" class="btn btn-primary">Submit</button>
-                    <a type="submit" class="btn btn-secondary" href="/positions">Cancel</a>
+                    <a class="btn btn-secondary" href="/positions">Cancel</a>
                 </div>
                 Created_at: {{ $position->created_at ?? ""}}<br/>
                 Updated_at: {{ $position->updated_at ?? ""}}<br/>
