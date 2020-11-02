@@ -55,7 +55,7 @@
                                         <tbody>
                                             @foreach( $employees as $employee )
                                             <tr>
-                                                <td>{{ $employee->photo }}</td>
+                                                <td><img alt="Avatar" class="table-avatar img-size-50 mr-3 img-circle" src="<?php echo asset("storage/images/$employee->photo") ?>"></td>
                                                 <td>{{ $employee->full_name }}</td>
                                                 <td>{{ $employee->title }}</td>
                                                 <td>{{ $employee->date_of_employment }}</td>
@@ -65,13 +65,13 @@
                                                 <td>
                                                     <ul class="list-inline">
                                                         <li class="list-inline-item">
-                                                            <a class="mr-4 text-secondary" href="#">
-                                                                <i class="fa fa-pen"></i>
+                                                            <a class="mr-4" href="/employees/edit/{{$employee->id}}">
+                                                                <i class="fa fa-pen text-primary"></i>
                                                             </a>
                                                         </li>
                                                         <li class="list-inline-item">
                                                             <a data-toggle="modal" data-target="#myModal" data-id="{{$employee->id}}" data-name="{{$employee->full_name}}">
-                                                                <i class="fa fa-trash-alt"></i>
+                                                                <i class="fa fa-trash-alt text-danger"></i>
                                                             </a>
                                                         </li>
                                                     </ul>

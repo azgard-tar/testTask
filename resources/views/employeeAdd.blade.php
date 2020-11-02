@@ -106,9 +106,6 @@
             <div class="alert alert-danger" role="alert">
                 {{ json_encode($errors,true) }}
             </div>
-            @isset( $dataReq)
-                {{ json_encode($dataReq,true) }}
-            @endisset
         </form>
     </div>
     <!-- /.card -->

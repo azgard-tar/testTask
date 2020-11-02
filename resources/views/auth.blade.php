@@ -1,12 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <script src="{{ asset('js/app.js') }}" defer></script>
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="/bower_components/admin-lte/dist/css/adminlte.min.css">
+    <!-- Google Font: Source Sans Pro -->
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
 </head>
+
 <body>
     @include('top')
     <div class="container-fluid" style="height: 80vh">
@@ -32,58 +36,65 @@
                     </div>
                 </form>
                 @isset( $error )
-                    <div class="alert alert-danger" role="alert">
-                        {{ $error }}
-                    </div>
+                <div class="alert alert-danger" role="alert">
+                    {{ $error }}
+                </div>
                 @endisset
             </div>
         </div>
     </div>
+    <!-- jQuery -->
+    <script src="/bower_components/admin-lte/plugins/jquery/jquery.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="/bower_components/admin-lte/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="/bower_components/admin-lte/dist/js/adminlte.min.js"></script>
     <script type="text/javascript">
-    $(document).ready(function () {
-    $.validator.setDefaults({
-        submitHandler: function () {
-            alert( "Form successful submitted!" );
-        }
-    });
-    $('#quickForm').validate({
-        rules: {
-        email: {
-            required: true,
-            email: true,
-        },
-        password: {
-            required: true,
-            minlength: 5
-        },
-        terms: {
-            required: true
-        },
-        },
-        messages: {
-        email: {
-            required: "Please enter a email address",
-            email: "Please enter a vaild email address"
-        },
-        password: {
-            required: "Please provide a password",
-            minlength: "Your password must be at least 5 characters long"
-        },
-        terms: "Please accept our terms"
-        },
-        errorElement: 'span',
-        errorPlacement: function (error, element) {
-        error.addClass('invalid-feedback');
-        element.closest('.form-group').append(error);
-        },
-        highlight: function (element, errorClass, validClass) {
-        $(element).addClass('is-invalid');
-        },
-        unhighlight: function (element, errorClass, validClass) {
-        $(element).removeClass('is-invalid');
-        }
-    });
-    });
+        $(document).ready(function() {
+            $.validator.setDefaults({
+                submitHandler: function() {
+                    alert("Form successful submitted!");
+                }
+            });
+            $('#quickForm').validate({
+                rules: {
+                    email: {
+                        required: true,
+                        email: true,
+                    },
+                    password: {
+                        required: true,
+                        minlength: 5
+                    },
+                    terms: {
+                        required: true
+                    },
+                },
+                messages: {
+                    email: {
+                        required: "Please enter a email address",
+                        email: "Please enter a vaild email address"
+                    },
+                    password: {
+                        required: "Please provide a password",
+                        minlength: "Your password must be at least 5 characters long"
+                    },
+                    terms: "Please accept our terms"
+                },
+                errorElement: 'span',
+                errorPlacement: function(error, element) {
+                    error.addClass('invalid-feedback');
+                    element.closest('.form-group').append(error);
+                },
+                highlight: function(element, errorClass, validClass) {
+                    $(element).addClass('is-invalid');
+                },
+                unhighlight: function(element, errorClass, validClass) {
+                    $(element).removeClass('is-invalid');
+                }
+            });
+        });
     </script>
 </body>
+
 </html>

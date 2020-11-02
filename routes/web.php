@@ -45,8 +45,27 @@ Route::middleware(['auth'])->group( function() {
         if( ! $response->status ){
             return view("employeeAdd",(object) array_merge((array)$response,(array)(new EmployeeController)->getAddData()));
         }
-        return view("employeesList", (new EmployeeController)->show() );
+        return redirect()->route("employees");
+    });
+
+    Route::get('/employees/edit/{id}', function($id){
+        return view("employeeEdit",array_merge(
+            (array)(new EmployeeController)->getOne($id), 
+            (array)(new EmployeeController)->getAddData()
+        ));
+    });
+
+    Route::put('/employees/edit/{id}', function(Request $request, $id){
+        $response = (new EmployeeController)->update($request, $id);
+        if( ! $response->status ){
+            return view("employeeEdit",array_merge(
+                (array)(new EmployeeController)->getOne($id), 
+                (array)(new EmployeeController)->getAddData(),
+                (array)$response
+            ));
+        }
+        return redirect()->route("employees");
     });
 });
 
-Route::get('/login', [LoginController::class, 'authenticate'] );
+Route::get('/login', [LoginController::class, 'authenticate'] )->name('login');

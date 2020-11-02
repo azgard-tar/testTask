@@ -27,7 +27,9 @@ class EmployeeSeeder extends Seeder
                 'phone_number' => $faker->numerify('+380(##)#######'),
                 'salary' => $faker->numberBetween(0,500000),
                 'admin_created_id' => 1,
-                'admin_updated_id' => 1
+                'admin_updated_id' => 1,
+                'created_at' => date('Y-m-d'),
+                'updated_at' => date('Y-m-d')
             ]);
         }
     }
