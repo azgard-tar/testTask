@@ -22,7 +22,7 @@ class ImageController extends Controller
         $currentEmployee = employee::findOrFail( $employee->id );
         if( $request->hasFile('photo') ){
             $request->validate([
-                'photo' => 'image|mimes:jpeg,png,jpg,svg|max:5120',
+                'photo' => 'image|mimes:jpeg,png,jpg|max:5120',
             ],[
                 "mimes" => "Current mimes is not supported",
                 "max"   => "Maximum size of file is 5mb",

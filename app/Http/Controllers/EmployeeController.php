@@ -116,7 +116,7 @@ class EmployeeController extends Controller
             "full_name" => "required|min:2|max:256",
             "phone_number" => "required|regex:/\+380\(\d{2}\)\d{7}/",
             "email" => "required|email",
-            "salary" => "required|min:0|max:500000",
+            "salary" => "required|integer|min:0|max:500000",
             "id_head" => "required|integer",
             "id_position" => "required|exists:positions,id"
         ]);

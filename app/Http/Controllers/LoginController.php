@@ -14,6 +14,9 @@ class LoginController extends Controller
         if (Auth::attempt($credentials)) {
             return redirect()->route('employees');
         }
+        else if( is_null($request->email)){
+            return view("auth");
+        }
         else
             return view("auth",["error" => "Email or password is incorrect"]);
     }

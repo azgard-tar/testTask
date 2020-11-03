@@ -44,7 +44,7 @@
                 <div class="card card-primary">
                     <!-- /.card-header -->
                     <!-- form start -->
-                    <form role="form" method=POST enctype=multipart/form-data> <div class="card-body">
+                    <form id="editForm" role="form" method=POST enctype=multipart/form-data> <div class="card-body">
                         @csrf
                         @method('PUT')
                         <div class="form-group">
@@ -52,21 +52,27 @@
                             <img alt="Avatar" class="table-avatar img-size-50 mr-3 img-circle" src="<?php echo asset("storage/images/$employee->photo") ?>">
                             <div class="input-group">
                                 <div class="custom-file">
-                                    <input type="file" name="photo" class="custom-file-input" id="inputFile">
+                                    <input type="file" name="photo" class="custom-file-input" id="inputFile" aria-describedby="photoBlock">
                                     <label class="custom-file-label" for="inputFile">Choose file</label>
                                 </div>
-                                <div class="input-group-append">
-                                    <span class="input-group-text">Upload</span>
-                                </div>
                             </div>
+                            <small class="text-muted">
+                                Extensions: jpeg, jpg, png. Size: 5mb.
+                            </small>
                         </div>
                         <div class="form-group">
                             <label for="inputFullName">Full name</label>
                             <input type="text" name="full_name" value="{{ $employee->full_name }}" class="form-control" id="inputFullName" placeholder="Enter full name">
+                            <small class="text-muted">
+                                Maximum size:<span id="dynamicLength">0</span>/256
+                            </small>
                         </div>
                         <div class="form-group">
                             <label for="inputPhone">Phone</label>
                             <input type="text" name="phone_number" value="{{ $employee->phone_number }}" class="form-control" id="inputPhone" placeholder="Enter phone">
+                            <small class="text-muted">
+                                +380(xx)XXXXXXX
+                            </small>
                         </div>
                         <div class="form-group">
                             <label for="inputEmail">Email</label>
@@ -87,6 +93,9 @@
                         <div class="form-group">
                             <label for="inputSalary">Salary</label>
                             <input type="number" name="salary" value="{{ $employee->salary }}" class="form-control" id="inputSalary" placeholder="Enter salary">
+                            <small class="text-muted">
+                                Max:500000
+                            </small>
                         </div>
                         <div class="form-group">
                             <label>Head</label>
@@ -108,12 +117,7 @@
                         <div class="form-group">
                             <label>Date:</label>
                             <div class="input-group date" id="reservationdate" data-target-input="nearest">
-                                <input type="text" value="{{ $employee->date_of_employment }}" 
-                                data-date-format="{{ Config::get('app.date_format_javascript') }}" 
-                                data-provide="datepicker" 
-                                name="date_of_employment" 
-                                class="form-control datetimepicker-input" 
-                                data-target="#reservationdate" />
+                                <input type="text" value="{{ $employee->date_of_employment }}" data-date-format="{{ Config::get('app.date_format_javascript') }}" data-provide="datepicker" name="date_of_employment" class="form-control datetimepicker-input" data-target="#reservationdate" />
                                 <div class="input-group-append" data-target="#reservationdate" data-toggle="datetimepicker">
                                     <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                 </div>
@@ -130,7 +134,7 @@
                 @if( count( $errors ) > 0 )
                 <div class="alert alert-danger" role="alert">
                     @foreach( $errors as $error )
-                        {{ $error[0] }}<br/>
+                    {{ $error[0] }}<br />
                     @endforeach
                 </div>
                 @endif
@@ -167,6 +171,8 @@
     <script src="/bower_components/admin-lte/plugins/select2/js/select2.full.min.js"></script>
     <script src="/bower_components/admin-lte/plugins/daterangepicker/daterangepicker.js"></script>
     <script src="/bower_components/admin-lte/plugins/bootstrap-switch/js/bootstrap-switch.min.js"></script>
+    <script src="/bower_components/admin-lte/plugins/jquery-validation/jquery.validate.min.js"></script>
+    <script src="/bower_components/admin-lte/plugins/jquery-validation/additional-methods.min.js"></script>
     <!-- AdminLTE App -->
     <script src="/bower_components/admin-lte/dist/js/adminlte.min.js"></script>
     <!-- AdminLTE for demo purposes -->
@@ -179,6 +185,75 @@
             // Summernote
             $('.select2').select2()
         })
+        $('#dynamicLength').text( $('#inputFullName').val().length );
+        $('#inputFullName').keyup(function(event) {
+            $('#dynamicLength').text($('#inputFullName').val().length);
+        })
+        $(document).ready(function() {
+            $('#editForm').validate({
+                rules: {
+                    email: {
+                        required: true,
+                        email: true,
+                    },
+                    full_name: {
+                        required: true,
+                        minlength: 2,
+                        maxlength: 256
+                    },
+                    phone_number: {
+                        required: true
+                    },
+                    photo: {
+                        extension: "jpeg|jpg|png"
+                    },
+                    salary: {
+                        required: true,
+                        max: 500000,
+                        min: 0
+                    },
+                    date_of_employment: {
+                        required: true
+                    },
+                },
+                messages: {
+                    email: {
+                        required: "Please enter a email address",
+                        email: "Please enter a vaild email address"
+                    },
+                    full_name: {
+                        required: "Please enter a full name",
+                        minlength: "Your name must be at least 2 characters long",
+                        maxlength: "Your name must not exceed 256 characters long"
+                    },
+                    phone_number: {
+                        required: "Please enter a phone number( ukrainian form )"
+                    },
+                    photo: {
+                        extension: "jpeg|jpg|png"
+                    },
+                    salary: {
+                        required: "Please enter a salary",
+                        max: "Salary must not exceed 500000",
+                        min: "Salary must not be negative"
+                    },
+                    date_of_employment: {
+                        required: "Please choose a date of employment"
+                    },
+                },
+                errorElement: 'span',
+                errorPlacement: function(error, element) {
+                    error.addClass('invalid-feedback');
+                    element.closest('.form-group').append(error);
+                },
+                highlight: function(element, errorClass, validClass) {
+                    $(element).addClass('is-invalid');
+                },
+                unhighlight: function(element, errorClass, validClass) {
+                    $(element).removeClass('is-invalid');
+                }
+            });
+        });
     </script>
 </body>
 
