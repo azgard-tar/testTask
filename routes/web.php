@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\PositionController;
+use App\Models\employee;
 
 /*
 |--------------------------------------------------------------------------
@@ -61,7 +62,7 @@ Route::middleware(['auth'])->group( function() {
         }
         return redirect()->route("employees");
     });
-    Route::get('/employee/subordination/{id}',[EmployeeController::class, 'subord' ]);
+    Route::get('/employee/subordination/{id}',[EmployeeController::class, 'subord' ]); // For check subordination of employee
 
     // Position
     Route::get('/positions', function () {

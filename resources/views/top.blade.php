@@ -10,7 +10,7 @@
 <nav class="fixed-top navbar navbar-expand thisNav">
     <ul class="navbar-nav">
         <li class="nav-item text-white ml-3">
-            <h3> Test task </h1>
+            <h3> Test task </h3>
         </li>
     </ul>
     @if( Auth::check() )

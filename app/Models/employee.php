@@ -12,4 +12,5 @@ class employee extends Model
                            'phone_number','salary','photo',
                            'admin_created_id','admin_updated_id'
                           ];
+    protected $dates = ['date_of_employment','created_at','updated_at'];
 }

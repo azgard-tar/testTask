@@ -57,11 +57,11 @@
         <table class="table">
             <tr>
                 <th style="width:50%">Created_at:</th>
-                <td>{{ $position->created_at ?? ""}}</td>
+                <td>{{ date(Config::get('app.date_format'), strtotime( $position->created_at ?? "" )) }}</td>
             </tr>
             <tr>
                 <th>Updated_at</th>
-                <td>{{ $position->updated_at ?? ""}}</td>
+                <td>{{ date(Config::get('app.date_format'), strtotime( $position->updated_at ?? "" )) }}</td>
             </tr>
             <tr>
                 <th>Admin_created_id:</th>

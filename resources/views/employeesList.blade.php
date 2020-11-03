@@ -58,7 +58,7 @@
                                                 <td><img alt="Avatar" class="table-avatar img-size-50 mr-3 img-circle" src="<?php echo asset("storage/images/$employee->photo") ?>"></td>
                                                 <td>{{ $employee->full_name }}</td>
                                                 <td>{{ $employee->title }}</td>
-                                                <td>{{ $employee->date_of_employment }}</td>
+                                                <td>{{ date(Config::get('app.date_format'), strtotime(  $employee->date_of_employment ) ) }}</td>
                                                 <td>{{ $employee->phone_number }}</td>
                                                 <td>{{ $employee->email }}</td>
                                                 <td>{{ $employee->salary }}</td>

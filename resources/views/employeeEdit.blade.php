@@ -48,8 +48,8 @@
                         @csrf
                         @method('PUT')
                         <div class="form-group">
-                            <label for="inputFile">Photo</label>
-                            <img alt="Avatar" class="table-avatar img-size-50 mr-3 img-circle" src="<?php echo asset("storage/images/$employee->photo") ?>">
+                            <label for="inputFile">Photo</label><br />
+                            <img alt="Avatar" id="image" class="table-avatar img-thumbnail mr-3" src="<?php echo asset("storage/images/$employee->photo") ?>">
                             <div class="input-group">
                                 <div class="custom-file">
                                     <input type="file" name="photo" class="custom-file-input" id="inputFile" aria-describedby="photoBlock">
@@ -117,7 +117,10 @@
                         <div class="form-group">
                             <label>Date:</label>
                             <div class="input-group date" id="reservationdate" data-target-input="nearest">
-                                <input type="text" value="{{ $employee->date_of_employment }}" data-date-format="{{ Config::get('app.date_format_javascript') }}" data-provide="datepicker" name="date_of_employment" class="form-control datetimepicker-input" data-target="#reservationdate" />
+                                <input type="text"
+                                 value="{{ date(Config::get('app.date_format'), strtotime(  $employee->date_of_employment )) }}" 
+                                 data-date-format="{{ Config::get('app.date_format_datepick') }}" data-provide="datepicker" 
+                                 name="date_of_employment" class="form-control datetimepicker-input" data-target="#reservationdate" />
                                 <div class="input-group-append" data-target="#reservationdate" data-toggle="datetimepicker">
                                     <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                 </div>
@@ -145,11 +148,11 @@
             <table class="table">
                 <tr>
                     <th style="width:50%">Created_at:</th>
-                    <td>{{ $employee->created_at ?? ""}}</td>
+                    <td>{{ date(Config::get('app.date_format'), strtotime( $employee->created_at ?? "" )) }}</td>
                 </tr>
                 <tr>
                     <th>Updated_at</th>
-                    <td>{{ $employee->updated_at ?? ""}}</td>
+                    <td>{{ date(Config::get('app.date_format'), strtotime( $employee->updated_at ?? "" )) }}</td>
                 </tr>
                 <tr>
                     <th>Admin_created_id:</th>
@@ -181,11 +184,24 @@
     <!-- Summernote -->
     <script src="/bower_components/admin-lte/plugins/summernote/summernote-bs4.min.js"></script>
     <script>
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    $('#image').attr('src', e.target.result);
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        $("#inputFile").change(function() {
+            readURL(this);
+        });
         $(function() {
             // Summernote
             $('.select2').select2()
         })
-        $('#dynamicLength').text( $('#inputFullName').val().length );
+        $('#dynamicLength').text($('#inputFullName').val().length);
         $('#inputFullName').keyup(function(event) {
             $('#dynamicLength').text($('#inputFullName').val().length);
         })

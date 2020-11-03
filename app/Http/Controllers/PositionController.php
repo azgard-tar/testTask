@@ -44,8 +44,8 @@ class PositionController extends Controller
             return (object)['status' => false, 'errors' => $validator->errors()->toArray()];
         }
         $data = $request->except(['id']);
-        $data['created_at'] = date(config('app.date_format'));
-        $data['updated_at'] = date(config('app.date_format'));
+        $data['created_at'] = date(config('app.date_format_db'));
+        $data['updated_at'] = date(config('app.date_format_db'));
         $data['admin_created_id'] = auth()->user()->id;
         $data['admin_updated_id'] = auth()->user()->id;
         $position = position::create($data);
@@ -63,7 +63,7 @@ class PositionController extends Controller
         $position = position::find($id);
         if(!is_null($position)){
             $position->title = $request->title;
-            $position->updated_at = date(config('app.date_format'));
+            $position->updated_at = date(config('app.date_format_db'));
             $position->admin_updated_id = auth()->user()->id;
             $position->save();
             return (object)['status' => true];

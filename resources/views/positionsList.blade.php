@@ -49,7 +49,7 @@
                                             @foreach( $positions as $position )
                                             <tr>
                                                 <td>{{ $position->title }}</td>
-                                                <td>{{ $position->updated_at }}</td>
+                                                <td>{{ date(Config::get('app.date_format'), strtotime( $position->updated_at ?? "" )) }}</td>
                                                 <td>
                                                     <ul class="list-inline">
                                                         <li class="list-inline-item">

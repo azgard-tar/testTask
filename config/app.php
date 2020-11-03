@@ -4,9 +4,9 @@ return [
 
     // custom
 
-    'date_format' => 'Y-m-d',
-    'datetime_format' => 'Y-m-d H:i:s',
-    'date_format_javascript' => 'yyyy-m-d',
+    'date_format' => 'd.m.y',
+    'date_format_db' => 'Y-m-d',
+    'date_format_datepick' => 'dd.mm.yy',
     'datetime_format_javascript' => 'yyyy-m-d h:m:s',
 
     /*

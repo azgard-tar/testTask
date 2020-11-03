@@ -103,7 +103,7 @@
                     <label>Date:</label>
                     <div class="input-group date" id="reservationdate" data-target-input="nearest">
                         <input type="text" name="date_of_employment" 
-                        data-date-format="{{ Config::get('app.date_format_javascript') }}" 
+                        data-date-format="{{ Config::get('app.date_format_datepick') }}" 
                         data-provide="datepicker" 
                         class="form-control datetimepicker-input" 
                         data-target="#reservationdate" />
