@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="/bower_components/admin-lte/plugins/daterangepicker/daterangepicker.css">
     <link rel="stylesheet" href="/bower_components/admin-lte/plugins/select2/css/select2.min.css">
     <link rel="stylesheet" href="/css/bootstrap-datepicker.css">
+    <link rel="stylesheet" href="/css/bootstrap-datepicker3.css">
     <link rel="stylesheet" href="/bower_components/admin-lte/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
     <!-- Theme style -->
     <link rel="stylesheet" href="/bower_components/admin-lte/dist/css/adminlte.min.css">
@@ -117,10 +118,7 @@
                         <div class="form-group">
                             <label>Date:</label>
                             <div class="input-group date" id="reservationdate" data-target-input="nearest">
-                                <input type="text"
-                                 value="{{ date(Config::get('app.date_format'), strtotime(  $employee->date_of_employment )) }}" 
-                                 data-date-format="{{ Config::get('app.date_format_datepick') }}" data-provide="datepicker" 
-                                 name="date_of_employment" class="form-control datetimepicker-input" data-target="#reservationdate" />
+                                <input type="text" value="{{ date(Config::get('app.date_format'), strtotime(  $employee->date_of_employment )) }}" data-date-format="{{ Config::get('app.date_format_datepick') }}" data-provide="datepicker" name="date_of_employment" class="form-control datetimepicker-input" data-target="#reservationdate" />
                                 <div class="input-group-append" data-target="#reservationdate" data-toggle="datetimepicker">
                                     <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                 </div>
@@ -184,6 +182,7 @@
     <!-- Summernote -->
     <script src="/bower_components/admin-lte/plugins/summernote/summernote-bs4.min.js"></script>
     <script>
+
         function readURL(input) {
             if (input.files && input.files[0]) {
                 var reader = new FileReader();
@@ -193,7 +192,7 @@
                 reader.readAsDataURL(input.files[0]);
             }
         }
-
+        $('.datepicker').datepicker('update', new Date(2011, 2, 5));
         $("#inputFile").change(function() {
             readURL(this);
         });
@@ -246,7 +245,7 @@
                         required: "Please enter a phone number( ukrainian form )"
                     },
                     photo: {
-                        extension: "jpeg|jpg|png"
+                        extension: "You have to use extensions jpeg|jpg|png"
                     },
                     salary: {
                         required: "Please enter a salary",
