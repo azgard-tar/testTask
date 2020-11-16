@@ -21,8 +21,8 @@ class PositionSeeder extends Seeder
                 'admin_created_id' => 1,
                 'admin_updated_id' => 1,
                 'title' => 'none',
-                'updated_at' => date(config('app.datetime_format')),
-                'created_at' => date(config('app.datetime_format'))
+                'updated_at' => date(config('app.date_format_db')),
+                'created_at' => date(config('app.date_format_db'))
             ]);
         }
         $faker = Faker\Factory::create();
@@ -31,8 +31,8 @@ class PositionSeeder extends Seeder
                 'admin_created_id' => 1,
                 'admin_updated_id' => 1,
                 'title' => $faker->jobTitle,
-                'updated_at' => date(config('app.datetime_format')),
-                'created_at' => date(config('app.datetime_format'))
+                'updated_at' => date(config('app.date_format_db')),
+                'created_at' => date(config('app.date_format_db'))
             ]);
         }
     }

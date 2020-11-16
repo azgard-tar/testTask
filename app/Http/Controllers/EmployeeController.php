@@ -11,17 +11,13 @@ use Carbon\Carbon;
 
 class EmployeeController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
     public function show()
     {
         $data = DB::table('employees')
             ->join('positions', 'employees.id_position', '=', 'positions.id')
             ->select('employees.*', 'positions.title')->get();
         
-        return ["employees" => $data, "code" => 200];
+        return view('employeesList', ["employees" => $data, "code" => 200] );
     }
     public function getOne($id)
     {
@@ -41,7 +37,7 @@ class EmployeeController extends Controller
         if (!is_null($empl)) {
             $empl->delete();
             employee::where('id_head', $empl->id)->update(['id_head' => null]);
-            return ["error" => null, "code" => 203];
+            return redirect()->route('employees');
         } else {
             return ["error" => "Employee was not found", "code" => 404];
         }

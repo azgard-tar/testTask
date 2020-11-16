@@ -26,15 +26,10 @@ Route::get('/', function () {
         return view('auth');
 });
 
-Route::middleware(['auth'])->group( function() {
+Route::group([ 'middleware' => ['auth'] ], function() {
     // Employee
-    Route::get('/employeesList', function(){
-        return view('employeesList', (new EmployeeController)->show() );
-    })->name('employees');
-    Route::get('/employees/delete/{id}', function($id){
-        (new EmployeeController)->delete($id);
-        return redirect()->route('employees');
-    });
+    Route::get('/employeesList', "EmployeeController@show")->name('employees');
+    Route::get('/employees/delete/{id}', "EmployeeController@delete");
     Route::get('/employees/add', function(){
         return view("employeeAdd",(new EmployeeController)->getAddData());
     });
