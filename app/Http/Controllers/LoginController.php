@@ -20,6 +20,12 @@ class LoginController extends Controller
         else
             return view("auth",["error" => "Email or password is incorrect"]);
     }
+    public function login(){
+        if( Auth::check() )
+            return redirect()->route('employees');
+        else
+            return view('auth');
+    }
     public function logout(){
         Auth::logout();
         return view("auth");

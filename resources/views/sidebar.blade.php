@@ -9,7 +9,7 @@
       <ul class="nav nav-pills nav-sidebar flex-column mt-3" data-widget="treeview" role="menu">
         <li class="nav-item"></li>
         <li class="nav-item">
-          <a href="/employeesList" class="nav-link">
+          <a href="/employees" class="nav-link">
             <i class="nav-icon fa fa-users"></i>
             <p>
               Employees

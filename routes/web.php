@@ -19,57 +19,30 @@ use App\Models\employee;
 |
 */
 
-Route::get('/', function () {
-    if( Auth::check() )
-        return redirect()->route('employees');
-    else
-        return view('auth');
-});
+Route::get('/',                       [LoginController::class, 'login'        ] );
+Route::get('/login',                  [LoginController::class, 'authenticate' ] )->name('login');
 
-Route::group([ 'middleware' => ['auth'] ], function() { // add prefix
+Route::group([ 'middleware' => ['auth'], "prefix" => "employees" ], function() {
     // Employee
-    Route::get( '/employees',                   [EmployeeController::class, 'show'      ] )->name('employees');
-    Route::get( '/employees/delete/{id}',       [EmployeeController::class, 'delete'    ] );
-    Route::get( '/employees/add',               [EmployeeController::class, 'getAddData'] );
-    Route::post('/employees/add',               [EmployeeController::class, 'add'       ] );
-    Route::get( '/employees/edit/{id}',         [EmployeeController::class, 'updateGet' ] );
-    Route::put( '/employees/edit/{id}',         [EmployeeController::class, 'update'    ] ); 
-    Route::get( '/employee/subordination/{id}', [EmployeeController::class, 'subord'    ] );
+    Route::get( '/',                  [EmployeeController::class, 'show'      ] )->name('employees');
+    Route::get( '/delete/{id}',       [EmployeeController::class, 'delete'    ] );
+    Route::get( '/add',               [EmployeeController::class, 'getAddData'] );
+    Route::post('/add',               [EmployeeController::class, 'add'       ] );
+    Route::get( '/edit/{id}',         [EmployeeController::class, 'updateGet' ] );
+    Route::put( '/edit/{id}',         [EmployeeController::class, 'update'    ] ); 
+    Route::get( '/subordination/{id}',[EmployeeController::class, 'subord'    ] );
+});
+Route::group([ 'middleware' => ['auth'], "prefix" => "positions" ], function() {
 
-    // Position
-    Route::get('/positions', [PositionController::class, 'show'    ])->name('positions');
-    Route::get('/positions/delete/{id}', function($id){
-        (new PositionController)->delete($id);
-        return redirect()->route('positions');
-    });
-    Route::get('/positions/add', function(){
-        return view("positionAdd");
-    });
-    Route::post('/positions/add', function(Request $request){
-        $response = (new PositionController)->add($request);
-        if( ! $response->status ){
-            return view("positionAdd",(array)$response);
-        }
-        return redirect()->route("positions");
-    });
-    Route::get('/positions/edit/{id}', function($id){
-        return view("positionEdit", (new PositionController)->getOne($id), );
-    });
-    Route::put('/positions/edit/{id}', function(Request $request, $id){
-        $response = (new PositionController)->update($request, $id);
-        if( ! $response->status ){
-            return view("positionEdit",array_merge(
-                (array)(new PositionController)->getOne($id),
-                (array)$response
-            ));
-        }
-        return redirect()->route("positions");
-    });
-
-    // Other
+    Route::get('/',                   [PositionController::class, 'show'      ] )->name('positions');
+    Route::get('/delete/{id}',        [PositionController::class, 'delete'    ] );
+    Route::get('/add',                [PositionController::class, 'addView'   ] );
+    Route::post('/add',               [PositionController::class, 'add'       ] );
+    Route::get('/edit/{id}',          [PositionController::class, 'getOne'    ] );
+    Route::put('/edit/{id}',          [PositionController::class, 'update'    ] );
+});
+Route::group([ 'middleware' => ['auth'] ], function() {
     Route::get('/logout', [LoginController::class, 'logout'] );
-
-
 });
 
-Route::get('/login', [LoginController::class, 'authenticate'] )->name('login');
+

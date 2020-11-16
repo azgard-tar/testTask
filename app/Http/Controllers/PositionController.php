@@ -14,26 +14,25 @@ class PositionController extends Controller
     }
     public function getOne($id){
         $posit = position::find($id);
-        if (!is_null($posit)){
-            return ['status' => true, 'position' => $posit, "code" => 200];
-        }
+        if (!is_null($posit))
+            return  view('positionEdit',['position' => $posit]);
         else
-        return (object)[
-            'status' => false, 
-            "errors" => ["Position was not found"], 
-            "code" => 404
-        ];
+            return view('positionEdit',["errors" => ["Position was not found"]]);
     }
     public function delete($id){
         $posit = position::find($id);
         if( ! is_null($posit) ){
             employee::where('id_position',$posit->id)->update(['id_position' => 1]);
             $posit->delete();
-            return ["error" => null, "code" => 203];
+            return redirect()->route('positions');
         }
         else{
-            return ["error"=>"Position was not found","code" => 404];
+            return view('positionsList', ["error"=>"Position was not found"]);
         }
+    }
+
+    public function addView(){
+        return view('positionAdd');
     }
 
     public function add(Request $request){
@@ -41,7 +40,7 @@ class PositionController extends Controller
             "title" => "required|string|max:256|min:2"
         ]);
         if ($validator->fails()){
-            return (object)['status' => false, 'errors' => $validator->errors()->toArray()];
+            return view('positionAdd', ['errors' => $validator->errors()->toArray()]);
         }
         $data = $request->except(['id']);
         $data['created_at'] = date(config('app.date_format_db'));
@@ -50,25 +49,26 @@ class PositionController extends Controller
         $data['admin_updated_id'] = auth()->user()->id;
         $position = position::create($data);
         $position->save();
-        return (object)['status' => true];
+        return redirect()->route("positions");
     }
 
     public function update(Request $request, $id){
         $validator = Validator::make($request->all(),[
             "title" => "required|string|max:256|min:2"
         ]);
-        if ($validator->fails()){
-            return (object)['status' => false, 'errors' => $validator->errors()->toArray()];
-        }
+        $error = null;
         $position = position::find($id);
-        if(!is_null($position)){
-            $position->title = $request->title;
-            $position->updated_at = date(config('app.date_format_db'));
-            $position->admin_updated_id = auth()->user()->id;
-            $position->save();
-            return (object)['status' => true];
-        }
+        if ($validator->fails())
+            $error = ['errors' => $validator->errors()->toArray()];
+        if( is_null( $position ) )
+            $error = ["errors"=> ["Position wasn't found"]];
+        if( !is_null( $error ) )
+            return view("positionAdd",array_merge((array)$position,(array)$error));
         
-        return (object)['status' => false,"errors"=>["Position wasn't found"]];
+        $position->title = $request->title;
+        $position->updated_at = date(config('app.date_format_db'));
+        $position->admin_updated_id = auth()->user()->id;
+        $position->save();
+        return redirect()->route("positions");
     }
 }
