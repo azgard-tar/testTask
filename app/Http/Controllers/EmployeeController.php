@@ -23,13 +23,9 @@ class EmployeeController extends Controller
     {
         $empl = employee::find($id);
         if (!is_null($empl)) {
-            return ['status' => true, 'employee' => $empl, "code" => 200];
+            return ['employee' => $empl];
         } else
-            return (object)[
-                'status' => false,
-                "errors" => ["employee" => "Employee was not found"],
-                "code" => 404
-            ];
+            return ["errors" => ["Employee was not found"]];
     }
     public function delete($id)
     {
@@ -39,15 +35,25 @@ class EmployeeController extends Controller
             employee::where('id_head', $empl->id)->update(['id_head' => null]);
             return redirect()->route('employees');
         } else {
-            return ["error" => "Employee was not found", "code" => 404];
+            return ["errors" => ["Employee was not found"]];
         }
     }
 
-    public function getAddData()
+    public function getAddData($include = null)
     {
         $employees = employee::select(['id', 'full_name'])->get();
         $positions = position::select(['id', 'title'])->get();
-        return  view("employeeAdd",["employees" => $employees, "positions" => $positions]);
+        if( is_null( $include ) )
+            return  ["employees" => $employees, "positions" => $positions];
+        else
+            return  array_merge(
+                        ["employees" => $employees, "positions" => $positions],
+                        $include
+                    );
+    }
+
+    public function addView(){
+        return view("employeeAdd",$this->getAddData());
     }
 
     public function add(Request $request)
@@ -60,28 +66,15 @@ class EmployeeController extends Controller
             "id_head" => "required|integer",
             "id_position" => "required|exists:positions,id"
         ]);
-        if ($validator->fails()) {
-            // return view("employeeAdd",
-            //         array_merge(
-            //             ['status' => false, 'errors' => $validator->errors()->toArray()] ,
-            //             (array)$this->getAddData()
-            //         )
-            //     );
-            $employees = employee::select(['id', 'full_name'])->get();
-            $positions = position::select(['id', 'title'])->get();
-            return view("employeeAdd", ["employees" => $employees, "positions" => $positions,'status' => false, 'errors' => $validator->errors()->toArray()]);
-        }
-        if ($request->id_head != -1) {
-            $levelOfSubord = $this->checkSubordTree($request->id_head)['level'];
-            if ($levelOfSubord == 5){
-                $employees = employee::select(['id', 'full_name'])->get();
-                $positions = position::select(['id', 'title'])->get();
-                return view("employeeAdd", ["employees" => $employees, "positions" => $positions,'status' => false, 'errors' => ["Level of subordination is already 5."]]);
-            }
-        }
-        else{
+        if ($validator->fails()) 
+            return view("employeeAdd", $this->getAddData( ['errors' => $validator->errors()->toArray() ]));
+        
+        if ($request->id_head != -1) 
+            if ($this->checkSubordTree($request->id_head)['level'] == 5)
+                return view("employeeAdd", $this->getAddData( ['errors' => ["Level of subordination is already 5."] ]));
+        else
             $data['id_head'] = null;
-        }
+        
         $data = $request->except(['id', 'photo']);
         $data['created_at'] = Carbon::now();
         $data['updated_at'] = Carbon::now();
@@ -92,9 +85,9 @@ class EmployeeController extends Controller
         $array = explode('.',$request->date_of_employment);
             $employee->date_of_employment = date('Y-m-d',strtotime($array[1].'/'.$array[0].'/'.$array[2]));
         $employee->save();
-        if ($request->photo) {
+        if ($request->photo) 
             (new ImageController)->uploadImage($request, $employee);
-        }
+
         return redirect()->route("employees");
     }
 

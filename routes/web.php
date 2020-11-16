@@ -19,21 +19,26 @@ use App\Models\employee;
 |
 */
 
+// rename model's name ( dumpautoload )
+
 Route::get('/',                       [LoginController::class, 'login'        ] );
 Route::get('/login',                  [LoginController::class, 'authenticate' ] )->name('login');
 
+Route::group([ 'middleware' => ['auth'] ], function() {
+    Route::get('/logout',             [LoginController::class, 'logout'       ] );
+});
+
 Route::group([ 'middleware' => ['auth'], "prefix" => "employees" ], function() {
-    // Employee
     Route::get( '/',                  [EmployeeController::class, 'show'      ] )->name('employees');
     Route::get( '/delete/{id}',       [EmployeeController::class, 'delete'    ] );
-    Route::get( '/add',               [EmployeeController::class, 'getAddData'] );
+    Route::get( '/add',               [EmployeeController::class, 'addView'   ] );
     Route::post('/add',               [EmployeeController::class, 'add'       ] );
     Route::get( '/edit/{id}',         [EmployeeController::class, 'updateGet' ] );
     Route::put( '/edit/{id}',         [EmployeeController::class, 'update'    ] ); 
     Route::get( '/subordination/{id}',[EmployeeController::class, 'subord'    ] );
 });
-Route::group([ 'middleware' => ['auth'], "prefix" => "positions" ], function() {
 
+Route::group([ 'middleware' => ['auth'], "prefix" => "positions" ], function() {
     Route::get('/',                   [PositionController::class, 'show'      ] )->name('positions');
     Route::get('/delete/{id}',        [PositionController::class, 'delete'    ] );
     Route::get('/add',                [PositionController::class, 'addView'   ] );
@@ -41,8 +46,7 @@ Route::group([ 'middleware' => ['auth'], "prefix" => "positions" ], function() {
     Route::get('/edit/{id}',          [PositionController::class, 'getOne'    ] );
     Route::put('/edit/{id}',          [PositionController::class, 'update'    ] );
 });
-Route::group([ 'middleware' => ['auth'] ], function() {
-    Route::get('/logout', [LoginController::class, 'logout'] );
-});
+
+
 
 
