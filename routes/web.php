@@ -26,43 +26,18 @@ Route::get('/', function () {
         return view('auth');
 });
 
-Route::group([ 'middleware' => ['auth'] ], function() {
+Route::group([ 'middleware' => ['auth'] ], function() { // add prefix
     // Employee
-    Route::get('/employeesList', "EmployeeController@show")->name('employees');
-    Route::get('/employees/delete/{id}', "EmployeeController@delete");
-    Route::get('/employees/add', function(){
-        return view("employeeAdd",(new EmployeeController)->getAddData());
-    });
-    Route::post('/employees/add', function(Request $request){
-        $response = (new EmployeeController)->add($request);
-        if( ! $response->status ){
-            return view("employeeAdd",(array) array_merge((array)$response,(array)(new EmployeeController)->getAddData()));
-        }
-        return redirect()->route("employees");
-    });
-    Route::get('/employees/edit/{id}', function($id){
-        return view("employeeEdit",array_merge(
-            (array)(new EmployeeController)->getOne($id), 
-            (array)(new EmployeeController)->getAddData()
-        ));
-    });
-    Route::put('/employees/edit/{id}', function(Request $request, $id){
-        $response = (new EmployeeController)->update($request, $id);
-        if( ! $response->status ){
-            return view("employeeEdit",array_merge(
-                (array)(new EmployeeController)->getOne($id), 
-                (array)(new EmployeeController)->getAddData(),
-                (array)$response
-            ));
-        }
-        return redirect()->route("employees");
-    });
-    Route::get('/employee/subordination/{id}',[EmployeeController::class, 'subord' ]); // For check subordination of employee
+    Route::get( '/employees',                   [EmployeeController::class, 'show'      ] )->name('employees');
+    Route::get( '/employees/delete/{id}',       [EmployeeController::class, 'delete'    ] );
+    Route::get( '/employees/add',               [EmployeeController::class, 'getAddData'] );
+    Route::post('/employees/add',               [EmployeeController::class, 'add'       ] );
+    Route::get( '/employees/edit/{id}',         [EmployeeController::class, 'updateGet' ] );
+    Route::put( '/employees/edit/{id}',         [EmployeeController::class, 'update'    ] ); 
+    Route::get( '/employee/subordination/{id}', [EmployeeController::class, 'subord'    ] );
 
     // Position
-    Route::get('/positions', function () {
-        return view('positionsList',(new PositionController)->show());
-    })->name('positions');
+    Route::get('/positions', [PositionController::class, 'show'    ])->name('positions');
     Route::get('/positions/delete/{id}', function($id){
         (new PositionController)->delete($id);
         return redirect()->route('positions');

@@ -47,7 +47,7 @@ class EmployeeController extends Controller
     {
         $employees = employee::select(['id', 'full_name'])->get();
         $positions = position::select(['id', 'title'])->get();
-        return ["employees" => $employees, "positions" => $positions];
+        return  view("employeeAdd",["employees" => $employees, "positions" => $positions]);
     }
 
     public function add(Request $request)
@@ -61,12 +61,23 @@ class EmployeeController extends Controller
             "id_position" => "required|exists:positions,id"
         ]);
         if ($validator->fails()) {
-            return (object)['status' => false, 'errors' => $validator->errors()->toArray()];
+            // return view("employeeAdd",
+            //         array_merge(
+            //             ['status' => false, 'errors' => $validator->errors()->toArray()] ,
+            //             (array)$this->getAddData()
+            //         )
+            //     );
+            $employees = employee::select(['id', 'full_name'])->get();
+            $positions = position::select(['id', 'title'])->get();
+            return view("employeeAdd", ["employees" => $employees, "positions" => $positions,'status' => false, 'errors' => $validator->errors()->toArray()]);
         }
         if ($request->id_head != -1) {
             $levelOfSubord = $this->checkSubordTree($request->id_head)['level'];
-            if ($levelOfSubord == 5)
-                return (object)['status' => false, 'errors' => ["Level of subordination is already 5."]];
+            if ($levelOfSubord == 5){
+                $employees = employee::select(['id', 'full_name'])->get();
+                $positions = position::select(['id', 'title'])->get();
+                return view("employeeAdd", ["employees" => $employees, "positions" => $positions,'status' => false, 'errors' => ["Level of subordination is already 5."]]);
+            }
         }
         else{
             $data['id_head'] = null;
@@ -84,7 +95,7 @@ class EmployeeController extends Controller
         if ($request->photo) {
             (new ImageController)->uploadImage($request, $employee);
         }
-        return (object)['status' => true];
+        return redirect()->route("employees");
     }
 
     public function checkSubordTree($id)
@@ -108,6 +119,29 @@ class EmployeeController extends Controller
         return json_encode($this->checkSubordTree($id), true);
     }
 
+    public function getUpdateData($id,$include = null){
+        $employees = employee::select(['id', 'full_name'])->get();
+        $positions = position::select(['id', 'title'])->get();
+        if( is_null( $include ) ){
+            return array_merge(
+                $this->getOne($id),
+                ["employees" => $employees, "positions" => $positions]
+            );
+        } 
+        else{
+            return array_merge(
+                $this->getOne($id),
+                ["employees" => $employees, "positions" => $positions],
+                (array) $include
+            );
+        }
+        
+    }
+
+    public function updateGet($id){
+        return view("employeeEdit",$this->getUpdateData($id));
+    }
+
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
@@ -118,45 +152,37 @@ class EmployeeController extends Controller
             "id_head" => "required|integer",
             "id_position" => "required|exists:positions,id"
         ]);
-        if ($validator->fails()) {
-            return (object)[
-                'status' => false,
-                'errors' => $validator->errors()->toArray(),
-                "code" => 400
-            ];
-        }
-
-        if ($request->id_head != -1) {
+        $error = null;
+        $empl = employee::find($id);
+        if( $validator->fails() ) 
+            $error = ['errors' => $validator->errors()->toArray()];
+        if( $request->id_head != -1 ) {
             $levelOfSubord = $this->checkSubordTree($request->id_head)['level'];
             if ($levelOfSubord == 5)
-                return (object)['status' => false, 'errors' => ["Level of subordination is already 5."]];
+                $error = ['errors' => ["Level of subordination is already 5."]];
             if ($levelOfSubord <= $this->checkSubordTree($id)['level'])
-                return (object)['status' => false, 'errors' => [["Level of subordination of this person( 'head' ) is too small."]]];
+                $error = ['errors' => ["Level of subordination of this person( 'head' ) is too small."]]; 
         }
+        if( is_null($empl) )
+            $error = ['errors' => ["Employee was not found"]];
+        
+        if( !is_null( $error ) )
+            return view("employeeEdit", $this->getUpdateData($id,$error));
+        
 
-        $empl = employee::find($id);
-        if (!is_null($empl)) {
-            $request->updated_at = Carbon::now();
-            $request->admin_updated_id = auth()->user()->id;
-            $empl->update($request->except(['id', 'created_at', 'admin_created_id', 'date_of_employment', 'photo']));
-            $array = explode('.',$request->date_of_employment);
-            $empl->date_of_employment = date('Y-m-d',strtotime($array[1].'/'.$array[0].'/'.$array[2]));
-            if ($request->id_head == -1)
-                $empl->id_head = null;
+        $request->updated_at = Carbon::now();
+        $request->admin_updated_id = auth()->user()->id;
+        $empl->update($request->except(['id', 'created_at', 'admin_created_id', 'date_of_employment', 'photo']));
+        $array = explode('.',$request->date_of_employment);
+        $empl->date_of_employment = date('Y-m-d',strtotime($array[1].'/'.$array[0].'/'.$array[2]));
+        if ($request->id_head == -1)
+            $empl->id_head = null;
 
-            $empl->save();
-            if ($request->hasFile('photo')) {
-                (new ImageController)->uploadImage($request, $empl);
-            }
-            return (object)[
-                'status' => true,
-                "code" => 200
-            ];
-        } else
-            return (object)[
-                'status' => false,
-                "errors" => "Employee was not found",
-                "code" => 404
-            ];
+        $empl->save();
+        if ($request->hasFile('photo')) {
+            (new ImageController)->uploadImage($request, $empl);
+        }
+        return redirect()->route("employees");
+              
     }
 }

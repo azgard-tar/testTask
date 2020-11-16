@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Validator;
 class PositionController extends Controller
 {
     public function show(){
-        return ['positions' => position::all(), "code" => 200];
+        return view('positionsList',['positions' => position::all()]);
     }
     public function getOne($id){
         $posit = position::find($id);
