@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,21 +9,20 @@
     <link href="{{ asset('/bower_components/admin-lte/plugins/datatables-responsive/css/responsive.bootstrap4.min.css')}}" rel="stylesheet" />
     <link href="{{ asset('/bower_components/admin-lte/dist/css/adminlte.min.css')}}" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet" />
-    <title> List of employees </title>
+    <title> List of positions </title>
 </head>
-
 <body class="hold-transition sidebar-mini">
     <div class="wrapper">
-        @include('sidebar')
+        @include('html_parts/sidebar')
         <div class="content-wrapper">
             <section class="content-header">
                 <div class="container-fluid">
                     <div class="row mb-2">
                         <div class="col-sm-6">
-                            <h1>Employees</h1>
+                            <h1>Positions</h1>
                         </div>
                         <div class="col-sm-6 d-flex flex-row-reverse">
-                            <a class="btn btn-primary" href="/employees/add" role="button">Add employee</a>
+                            <a class="btn btn-primary" href="/positions/add" role="button">Add position</a>
                         </div>
                     </div>
                 </div><!-- /.container-fluid -->
@@ -35,42 +33,32 @@
                         <div class="col-12">
                             <div class="card">
                                 <div class="card-header">
-                                    <h3 class="card-title">Employees</h3>
+                                    <h3 class="card-title">Positions</h3>
                                 </div>
                                 <!-- /.card-header -->
                                 <div class="card-body">
                                     <table id="example1" class="table table-bordered table-striped">
                                         <thead>
                                             <tr>
-                                                <th>Photo</th>
-                                                <th>Full name</th>
-                                                <th>Position</th>
-                                                <th>Date of employment</th>
-                                                <th>Phone number</th>
-                                                <th>Email</th>
-                                                <th>Salary</th>
+                                                <th>Title</th>
+                                                <th>Last updated</th>
                                                 <th>Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach( $employees as $employee )
+                                            @foreach( $positions as $position )
                                             <tr>
-                                                <td><img alt="Avatar" class="table-avatar img-size-50 mr-3 img-circle" src="<?php echo asset("storage/images/$employee->photo") ?>"></td>
-                                                <td>{{ $employee->full_name }}</td>
-                                                <td>{{ $employee->title }}</td>
-                                                <td>{{ date(Config::get('app.date_format'), strtotime(  $employee->date_of_employment ) ) }}</td>
-                                                <td>{{ $employee->phone_number }}</td>
-                                                <td>{{ $employee->email }}</td>
-                                                <td>{{ $employee->salary }}</td>
+                                                <td>{{ $position->title }}</td>
+                                                <td>{{ date(Config::get('app.date_format'), strtotime( $position->updated_at ?? "" )) }}</td>
                                                 <td>
                                                     <ul class="list-inline">
                                                         <li class="list-inline-item">
-                                                            <a class="mr-4" href="/employees/edit/{{$employee->id}}">
+                                                            <a class="mr-4" href="/positions/edit/{{$position->id}}">
                                                                 <i class="fa fa-pen text-primary"></i>
                                                             </a>
                                                         </li>
                                                         <li class="list-inline-item">
-                                                            <a data-toggle="modal" data-target="#myModal" data-id="{{$employee->id}}" data-name="{{$employee->full_name}}">
+                                                            <a data-toggle="modal" data-target="#myModal" data-id="{{$position->id}}" data-name="{{$position->title}}">
                                                                 <i class="fa fa-trash-alt text-danger"></i>
                                                             </a>
                                                         </li>
@@ -93,7 +81,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title" id="myModalLabel">Remove employee</h4>
+                    <h4 class="modal-title" id="myModalLabel">Remove position</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 </div>
                 <div class="modal-body"></div>
@@ -126,11 +114,10 @@
             var recipient = button.data('name');
             var modal = $(this)
             el = button.parents('tr');
-            modal.find('.modal-body').text('Are you sure you want to remove employee ' + recipient + 
-            '? Head of subordinates will be setted as defaul value(null).')
-            modal.find('#modal-btn').attr('href', '/employees/delete/' + button.data('id'))
+            modal.find('.modal-body').text('Are you sure you want to remove position ' + recipient + 
+            '? Position of exists employees will be setted in default value(\'none\').')
+            modal.find('#modal-btn').attr('href', '/positions/delete/' + button.data('id'))
         });
     </script>
 </body>
-
 </html>

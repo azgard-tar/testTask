@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\employee;
-use App\Models\position;
+use App\Models\Employee_Model;
+use App\Models\Position_Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
@@ -13,15 +13,16 @@ class EmployeeController extends Controller
 {
     public function show()
     {
-        $data = DB::table('employees')
-            ->join('positions', 'employees.id_position', '=', 'positions.id')
-            ->select('employees.*', 'positions.title')->get();
+        //$data = employee::select(['employees.*', 'positions.title'])->get();
         
-        return view('employeesList', ["employees" => $data, "code" => 200] );
+        $data = Employee_Model::join('positions_model', 'employees_model.id_position', '=', 'positions_model.id')
+            ->select('employees_model.*', 'positions_model.title')->get();
+        
+        return view('employees/list', ["employees" => $data, "code" => 200] );
     }
     public function getOne($id)
     {
-        $empl = employee::find($id);
+        $empl = Employee_Model::find($id);
         if (!is_null($empl)) {
             return ['employee' => $empl];
         } else
@@ -29,10 +30,10 @@ class EmployeeController extends Controller
     }
     public function delete($id)
     {
-        $empl = employee::find($id);
+        $empl = Employee_Model::find($id);
         if (!is_null($empl)) {
             $empl->delete();
-            employee::where('id_head', $empl->id)->update(['id_head' => null]);
+            Employee_Model::where('id_head', $empl->id)->update(['id_head' => null]);
             return redirect()->route('employees');
         } else {
             return ["errors" => ["Employee was not found"]];
@@ -41,8 +42,8 @@ class EmployeeController extends Controller
 
     public function getAddData($include = null)
     {
-        $employees = employee::select(['id', 'full_name'])->get();
-        $positions = position::select(['id', 'title'])->get();
+        $employees = Employee_Model::select(['id', 'full_name'])->get();
+        $positions = Position_Model::select(['id', 'title'])->get();
         if( is_null( $include ) )
             return  ["employees" => $employees, "positions" => $positions];
         else
@@ -53,25 +54,25 @@ class EmployeeController extends Controller
     }
 
     public function addView(){
-        return view("employeeAdd",$this->getAddData());
+        return view("employees/add",$this->getAddData());
     }
 
     public function add(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            "full_name" => "required|min:2|max:256|unique:employees",
+            "full_name" => "required|min:2|max:256|unique:employees_model",
             "phone_number" => "required|regex:/\+380\(\d{2}\)\d{7}/",
             "email" => "required|email",
             "salary" => "required|numeric|min:0|max:500000",
             "id_head" => "required|integer",
-            "id_position" => "required|exists:positions,id"
+            "id_position" => "required|exists:positions_model,id"
         ]);
         if ($validator->fails()) 
-            return view("employeeAdd", $this->getAddData( ['errors' => $validator->errors()->toArray() ]));
+            return view("employees/add", $this->getAddData( ['errors' => $validator->errors()->toArray() ]));
         
         if ($request->id_head != -1) 
             if ($this->checkSubordTree($request->id_head)['level'] == 5)
-                return view("employeeAdd", $this->getAddData( ['errors' => ["Level of subordination is already 5."] ]));
+                return view("employees/add", $this->getAddData( ['errors' => ["Level of subordination is already 5."] ]));
         else
             $data['id_head'] = null;
         
@@ -81,7 +82,7 @@ class EmployeeController extends Controller
         $data['admin_created_id'] = auth()->user()->id;
         $data['admin_updated_id'] = auth()->user()->id;
         
-        $employee = employee::create($data);
+        $employee = Employee_Model::create($data);
         $array = explode('.',$request->date_of_employment);
             $employee->date_of_employment = date('Y-m-d',strtotime($array[1].'/'.$array[0].'/'.$array[2]));
         $employee->save();
@@ -93,8 +94,8 @@ class EmployeeController extends Controller
 
     public function checkSubordTree($id)
     {
-        $empl['data'] = employee::where('id', $id)->select('id', 'full_name', 'id_head')->get();
-        $data = employee::where('id_head', $id)->select('id', 'full_name', 'id_head')->get();
+        $empl['data'] = Employee_Model::where('id', $id)->select('id', 'full_name', 'id_head')->get();
+        $data = Employee_Model::where('id_head', $id)->select('id', 'full_name', 'id_head')->get();
         $level = 0;
         if (count($data) > 0) {
             for ($i = 0; $i < count($data); $i++) {
@@ -107,14 +108,13 @@ class EmployeeController extends Controller
         return $empl;
     }
 
-    public function subord($id)
-    {
+    public function subord($id){
         return json_encode($this->checkSubordTree($id), true);
     }
 
     public function getUpdateData($id,$include = null){
-        $employees = employee::select(['id', 'full_name'])->get();
-        $positions = position::select(['id', 'title'])->get();
+        $employees = Employee_Model::select(['id', 'full_name'])->get();
+        $positions = Position_Model::select(['id', 'title'])->get();
         if( is_null( $include ) ){
             return array_merge(
                 $this->getOne($id),
@@ -132,7 +132,7 @@ class EmployeeController extends Controller
     }
 
     public function updateGet($id){
-        return view("employeeEdit",$this->getUpdateData($id));
+        return view("employees/edit",$this->getUpdateData($id));
     }
 
     public function update(Request $request, $id)
@@ -143,10 +143,10 @@ class EmployeeController extends Controller
             "email" => "required|email",
             "salary" => "required|numeric|min:0|max:500000",
             "id_head" => "required|integer",
-            "id_position" => "required|exists:positions,id"
+            "id_position" => "required|exists:positions_model,id"
         ]);
         $error = null;
-        $empl = employee::find($id);
+        $empl = Employee_Model::find($id);
         if( $validator->fails() ) 
             $error = ['errors' => $validator->errors()->toArray()];
         if( $request->id_head != -1 ) {
@@ -160,7 +160,7 @@ class EmployeeController extends Controller
             $error = ['errors' => ["Employee was not found"]];
         
         if( !is_null( $error ) )
-            return view("employeeEdit", $this->getUpdateData($id,$error));
+            return view("employees/edit", $this->getUpdateData($id,$error));
         
 
         $request->updated_at = Carbon::now();

@@ -23,7 +23,7 @@
 </head>
 
 <body class="hold-transition sidebar-mini">
-    @include('sidebar')
+    @include('html_parts/sidebar')
     <div class="content-wrapper w-50">
         <!-- Content Header (Page header) -->
         <section class="content-header">

@@ -28,4 +28,4 @@
     </nav>
   </div>
 </aside>
-@include('top')
+@include('html_parts/top')

@@ -13,7 +13,7 @@ class CreatePositionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('positions', function (Blueprint $table) {
+        Schema::create('positions_model', function (Blueprint $table) {
             $table->id();
             $table->string('title',256)->unique();
             $table->integer('admin_created_id');
@@ -29,6 +29,6 @@ class CreatePositionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('positions');
+        Schema::dropIfExists('positions_model');
     }
 }

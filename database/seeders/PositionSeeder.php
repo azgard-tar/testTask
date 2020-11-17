@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use App\Models\position;
+use App\Models\Position_Model;
 use Faker;
 
 class PositionSeeder extends Seeder
@@ -16,8 +16,8 @@ class PositionSeeder extends Seeder
      */
     public function run()
     {
-        if( is_null(position::find(1)) ){
-            DB::table('positions')->insert([
+        if( is_null(Position_Model::find(1)) ){
+            DB::table('positions_model')->insert([
                 'admin_created_id' => 1,
                 'admin_updated_id' => 1,
                 'title' => 'none',
@@ -27,7 +27,7 @@ class PositionSeeder extends Seeder
         }
         $faker = Faker\Factory::create();
         for( $i = 0; $i < 10; $i++ ){
-            DB::table('positions')->insert([
+            DB::table('positions_model')->insert([
                 'admin_created_id' => 1,
                 'admin_updated_id' => 1,
                 'title' => $faker->jobTitle,

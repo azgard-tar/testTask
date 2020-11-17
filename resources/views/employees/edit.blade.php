@@ -27,7 +27,7 @@
 </head>
 
 <body class="hold-transition sidebar-mini">
-    @include('sidebar')
+    @include('html_parts/sidebar')
     <div class="container-fluid">
         <div class="row">
             <div class="content-wrapper col-sm">

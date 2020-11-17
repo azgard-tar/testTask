@@ -15,19 +15,19 @@ class LoginController extends Controller
             return redirect()->route('employees');
         }
         else if( is_null($request->email)){
-            return view("auth");
+            return view("login/auth");
         }
         else
-            return view("auth",["error" => "Email or password is incorrect"]);
+            return view("login/auth",["error" => "Email or password is incorrect"]);
     }
     public function login(){
         if( Auth::check() )
             return redirect()->route('employees');
         else
-            return view('auth');
+            return view('login/auth');
     }
     public function logout(){
         Auth::logout();
-        return view("auth");
+        return view("login/auth");
     }
 }

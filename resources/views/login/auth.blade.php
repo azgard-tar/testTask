@@ -12,7 +12,7 @@
 </head>
 
 <body>
-    @include('top')
+    @include('html_parts/top')
     <div class="container-fluid" style="height: 80vh">
         <div class="row justify-content-center align-items-center h-100">
             <div class="col-4">

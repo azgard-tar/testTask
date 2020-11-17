@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\PositionController;
-use App\Models\employee;
+use App\Models\Employee_Model;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,7 +19,7 @@ use App\Models\employee;
 |
 */
 
-// rename model's name ( dumpautoload )
+// view to folders
 
 Route::get('/',                       [LoginController::class, 'login'        ] );
 Route::get('/login',                  [LoginController::class, 'authenticate' ] )->name('login');
@@ -38,8 +38,10 @@ Route::group([ 'middleware' => ['auth'], "prefix" => "employees" ], function() {
     Route::get( '/subordination/{id}',[EmployeeController::class, 'subord'    ] );
 });
 
-Route::group([ 'middleware' => ['auth'], "prefix" => "positions" ], function() {
-    Route::get('/',                   [PositionController::class, 'show'      ] )->name('positions');
+Route::group([ 'middleware' => ['auth'], "prefix" => "positions", 'namespace' => 'App\Http\Controllers' ], function() {
+    // Route::get('/',                   [PositionController::class, 'show'      ] )->name('positions');
+    Route::get('/', [ 'as' => 'positions', 'uses' => 'PositionController@show'] );
+
     Route::get('/delete/{id}',        [PositionController::class, 'delete'    ] );
     Route::get('/add',                [PositionController::class, 'addView'   ] );
     Route::post('/add',               [PositionController::class, 'add'       ] );

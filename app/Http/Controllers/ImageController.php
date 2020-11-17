@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\employee;
+use App\Models\Employee_model;
 
 class ImageController extends Controller
 {
@@ -12,14 +12,14 @@ class ImageController extends Controller
         $this->middleware('auth:api');
     }
 
-    public static function getImage( Request $request, employee $employee )
+    public static function getImage( Request $request, Employee_model $employee )
     {
         return ["file" => storage_path("app/public/images/") . $employee->photo];
     }
 
-    public static function uploadImage( Request $request, employee $employee ){
+    public static function uploadImage( Request $request, Employee_model $employee ){
         $pathToImages = "app/public/images/";
-        $currentEmployee = employee::findOrFail( $employee->id );
+        $currentEmployee = Employee_model::findOrFail( $employee->id );
         if( $request->hasFile('photo') ){
             $request->validate([
                 'photo' => 'image|mimes:jpeg,png,jpg|max:5120',

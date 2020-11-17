@@ -18,7 +18,7 @@ class EmployeeSeeder extends Seeder
     {
         $faker = Faker\Factory::create();
         for( $i = 0; $i < 10; $i++ ){
-            DB::table('employees')->insert([
+            DB::table('employees_model')->insert([
                 'full_name' => $faker->name,
                 'email' => $faker->email,
                 'id_position' => $faker->numberBetween(1,10),

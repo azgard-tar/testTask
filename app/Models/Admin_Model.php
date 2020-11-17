@@ -7,10 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Auth\Authenticatable;
 
-class admin extends Model implements AuthenticatableContract
+class Admin extends Model implements AuthenticatableContract
 {
     use Authenticatable;
     protected $fillable = ['email','password'];
     protected $hidden = ['password'];
+    protected $table = 'admins_model';
 
 }
